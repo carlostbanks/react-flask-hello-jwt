@@ -50,7 +50,7 @@ def signup():
         return jsonify(response), 200
 
 
-@api.route("users", methods=["GET"])
+@api.route("/users", methods=["GET"])
 def get_users():
     users = User.query.all()
     users = list(map(lambda index: index.serialize(), users))
@@ -58,3 +58,36 @@ def get_users():
         "users": users
     }
     return jsonify(response_body), 200
+
+
+# DELETE USER
+@api.route("/users/<int:user>/", methods=["DELETE"])
+def delete_user(user):
+    users = User.query.filter(User.id == user).first()
+    if users is None: 
+        return jsonify({
+            "message": "User does not exist"
+        }), 404
+
+    db.session.delete(users)
+    db.session.commit()
+
+    return jsonify({
+        "message": "User was deleted successfully"
+    }), 201
+
+# GET 1 SPECIFIC USER
+@api.route("/users/<int:user>/", methods=["GET"])
+def get_specific_user(user):
+    user = User.query.filter(User.id == user).first()
+
+    if user is None:
+        return jsonify({
+            "message": "No user found"
+        }), 404
+
+    return jsonify({
+        "user": user.serialize()
+    }), 200
+
+    
