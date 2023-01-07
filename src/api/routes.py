@@ -30,7 +30,7 @@ def signup():
         
         email_query = User.query.filter_by(email=email).first()
         if email_query:
-            return 'This email already exists' , 401
+            return 'This email already exists' , 402
 
         user = User()
         user.email = email
@@ -189,7 +189,7 @@ def get_specific_planets(planets):
 
 #GET route for Vehicles
 @api.route("/vehicles", methods=["GET"])
-@jwt_required()
+#@jwt_required()
 def get_vehicles():
     vehicles = Vehicles.query.all()
     vehicles = list(map(lambda index: index.serialize(), vehicles))

@@ -1,3 +1,20 @@
-/* 
-    General Styles used on every website (Don't Repeat Yourself)
-*/
+.signup-form {
+    display: flex;
+    margin: 0 auto;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+}
+
+.forms {
+    width: 200px;
+    margin: 10px;
+    padding: 10px
+}
+
+.btn {
+    display: flex;
+    margin: 10px auto;
+    align-items: center;
+    justify-content: center;
+}
