@@ -8,7 +8,9 @@
 	"main": "index.js",
 	"scripts": {
 		"start": "webpack-dev-server --config webpack.dev.js --port 3000",
-		"build": "webpack --config webpack.prod.js"
+		
+		"build": "webpack --config webpack.prod.js",
+		"proxy": "lcp --proxyUrl https://3001-carlostbank-reactflaskh-hyb29h1fwaz.ws-us81.gitpod.io"
 	},
 	"author": {
 		"name": "Alejandro Sanchez",
@@ -73,6 +75,8 @@
 		]
 	},
 	"dependencies": {
+		"corsproxy": "^1.5.0",
+		"local-cors-proxy": "^1.1.0",
 		"prop-types": "^15.6.1",
 		"react": "^16.8.4",
 		"react-dom": "^16.8.4",

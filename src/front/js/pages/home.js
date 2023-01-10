@@ -15,7 +15,7 @@ export const Home = () => {
 			</div>
 			<div className="buttons">
 				<Link to={"/signup"}><button>Sign Up</button></Link>
-				<button>Login</button> 
+				<Link to={"/login"}><button>Login</button> </Link>
 			</div>
 		</div>
 	);

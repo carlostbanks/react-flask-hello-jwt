@@ -2,22 +2,24 @@ from flask import Flask, request, jsonify, url_for, Blueprint
 from api.models import db, User, Planets, Vehicles, Characters
 from api.utils import generate_sitemap, APIException
 from flask_jwt_extended import JWTManager, create_access_token, jwt_required, get_jwt_identity
+from flask_cors import CORS, cross_origin
+
 
 api = Blueprint('api', __name__)
+CORS(api)
 
 
 
 @api.route('/hello', methods=['POST', 'GET'])
 def handle_hello():
 
-    response_body = {
-        "message": "Hello! I'm a message that came from the backend, check the network tab on the google inspector and you will see the GET request"
-    }
-
-    return jsonify(response_body), 200
+    response_body = jsonify(message="Simple server is running")
+    response_body.headers.add("Access-Control-Allow-Origin", "*")
+    return response_body, 200
 
 
 @api.route("/signup", methods=["POST"])
+@cross_origin()
 def signup():
     if request.method == 'POST':
         email = request.json.get('email', None)
@@ -48,6 +50,8 @@ def signup():
 
     
 @api.route('/login', methods=['POST'])
+@cross_origin()
+
 def sign_in():
     if request.method == 'POST':
         email = request.json.get('email', None)
@@ -59,10 +63,12 @@ def sign_in():
 
     user = User.query.filter_by(email = email, password = password).first()
     if user is None:
-            return 'error: This user was not found' , 401
+            return 'error: This user was not found' , 402
     token = create_access_token(identity = user.id)
     print(token)
-    return jsonify({"message: Successfully logged in. Token: ": token}), 200
+    return jsonify({
+        "message" : "Successfully logged in.",
+        "token" : token}), 200
 
 
     
@@ -71,10 +77,9 @@ def sign_in():
 def get_users():
     users = User.query.all()
     users = list(map(lambda index: index.serialize(), users))
-    response_body = {
-        "users": users
-    }   
-    return jsonify(response_body), 200
+    response_body = jsonify(users)
+    response_body.headers.add("Access-Control-Allow-Origin", "*")
+    return response_body, 200
 
 # DELETE USER 
 @api.route("/users/<int:user>/", methods=["DELETE"])
@@ -107,16 +112,18 @@ def get_specific_user(user):
     
 #GET route for Planets
 @api.route("/planets", methods=["GET"])
+@jwt_required()
 def get_planets():
     planets = Planets.query.all()
     planets = list(map(lambda index: index.serialize(), planets))
-    response_body = {
-        "planets": planets
-    }   
-    return jsonify(response_body), 200
+    response_body = jsonify(planets)
+    response_body.headers.add("Access-Control-Allow-Origin", "*")
+    return response_body, 200
 
 #POST for planets
 @api.route("/planets", methods=["POST"])
+@cross_origin()
+
 def post_planets():
     if request.method == 'POST':
         planets_name = request.json.get('name', None)
@@ -189,17 +196,18 @@ def get_specific_planets(planets):
 
 #GET route for Vehicles
 @api.route("/vehicles", methods=["GET"])
-#@jwt_required()
+@jwt_required()
 def get_vehicles():
     vehicles = Vehicles.query.all()
     vehicles = list(map(lambda index: index.serialize(), vehicles))
-    response_body = {
-        "vehicles": vehicles
-    }   
-    return jsonify(response_body), 200
+    response_body = jsonify(vehicles)
+    response_body.headers.add("Access-Control-Allow-Origin", "*")
+    return response_body, 200
 
 #POST route for Vehicles
 @api.route("/vehicles", methods=["POST"])
+@cross_origin()
+
 def post_vehicles():
     if request.method == 'POST':
         vehicles_name = request.json.get('name', None)
@@ -273,13 +281,13 @@ def get_specific_vehicles(vehicles):
 
 #GET route for Characters
 @api.route("/characters", methods=["GET"])
+@jwt_required()
 def get_characters():
     characters = Characters.query.all()
     characters = list(map(lambda index: index.serialize(), characters))
-    response_body = {
-        "characters": characters
-    }   
-    return jsonify(response_body), 200
+    response_body = jsonify(characters)
+    response_body.headers.add("Access-Control-Allow-Origin", "*")
+    return response_body, 200
 
 #POST route for Characters
 @api.route("/characters", methods=["POST"])
